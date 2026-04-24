@@ -1,0 +1,214 @@
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  height: 100%;
+  overflow: hidden;
+  font-family: "Georgia", "Times New Roman", serif;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: none;
+}
+
+body {
+  position: relative;
+  background: #1a0a12;
+}
+
+.scene {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+}
+
+.gradient-bg {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse 120% 80% at 50% 20%, rgba(255, 182, 193, 0.45) 0%, transparent 55%),
+    radial-gradient(ellipse 90% 70% at 80% 90%, rgba(255, 105, 180, 0.25) 0%, transparent 50%),
+    radial-gradient(ellipse 70% 60% at 10% 70%, rgba(220, 20, 60, 0.2) 0%, transparent 45%),
+    linear-gradient(165deg, #2d0f1a 0%, #4a1528 35%, #6b1f3a 70%, #3d1022 100%);
+}
+
+.vignette {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: radial-gradient(ellipse at center, transparent 40%, rgba(10, 0, 8, 0.55) 100%);
+}
+
+#canvas-host {
+  position: absolute;
+  inset: 0;
+}
+
+#canvas-host canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+  filter: drop-shadow(0 0 12px rgba(255, 160, 180, 0.15));
+}
+
+.video-source {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+  pointer-events: none;
+  left: -9999px;
+}
+
+.overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 1.5rem;
+  pointer-events: none;
+}
+
+.overlay__title {
+  margin: 0 0 0.75rem;
+  font-size: clamp(1.75rem, 5vw, 3rem);
+  font-weight: 400;
+  letter-spacing: 0.04em;
+  color: #fff5f8;
+  text-shadow:
+    0 0 20px rgba(255, 182, 193, 0.9),
+    0 0 40px rgba(255, 105, 180, 0.5),
+    0 2px 8px rgba(60, 0, 20, 0.8);
+}
+
+.overlay__sub {
+  margin: 0;
+  max-width: 22rem;
+  font-size: clamp(0.95rem, 2.4vw, 1.15rem);
+  font-style: italic;
+  color: rgba(255, 228, 235, 0.92);
+  text-shadow:
+    0 0 16px rgba(255, 182, 193, 0.6),
+    0 1px 4px rgba(40, 0, 15, 0.7);
+  line-height: 1.5;
+}
+
+.heart-emoji {
+  filter: drop-shadow(0 0 8px rgba(255, 100, 140, 0.8));
+}
+
+.overlay__myanmar {
+  margin-top: 1.35rem;
+  max-width: min(26rem, 94vw);
+  font-family: "Noto Sans Myanmar", "Myanmar Text", "Padauk", sans-serif;
+}
+
+.overlay__myanmar-line {
+  margin: 0 0 0.55rem;
+  font-size: clamp(0.9rem, 3.4vw, 1.2rem);
+  font-weight: 500;
+  line-height: 1.7;
+  color: rgba(255, 248, 252, 0.96);
+  text-shadow:
+    0 0 18px rgba(255, 182, 193, 0.75),
+    0 0 32px rgba(255, 105, 180, 0.35),
+    0 1px 5px rgba(40, 0, 15, 0.75);
+}
+
+.overlay__myanmar-line:last-child {
+  margin-bottom: 0;
+}
+
+.overlay__myanmar-line--signoff {
+  margin-top: 0.4rem;
+  font-style: italic;
+  font-weight: 400;
+  opacity: 0.9;
+}
+
+.drag-hint {
+  position: fixed;
+  z-index: 3;
+  left: 50%;
+  bottom: max(1.1rem, env(safe-area-inset-bottom, 0px));
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.35rem;
+  max-width: min(20rem, 92vw);
+  padding: 0.65rem 1.1rem;
+  border-radius: 999px;
+  pointer-events: none;
+  color: rgba(255, 240, 246, 0.95);
+  background: rgba(35, 12, 24, 0.55);
+  border: 1px solid rgba(255, 182, 193, 0.35);
+  box-shadow:
+    0 0 24px rgba(255, 120, 160, 0.25),
+    0 4px 20px rgba(0, 0, 0, 0.35);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  transition: opacity 0.45s ease, transform 0.45s ease;
+  animation: drag-hint-float 2.4s ease-in-out infinite;
+}
+
+.drag-hint--gone {
+  opacity: 0;
+  transform: translateX(-50%) translateY(12px);
+  animation: none;
+  pointer-events: none;
+}
+
+.drag-hint__icon {
+  display: flex;
+  color: rgba(255, 190, 210, 0.95);
+  filter: drop-shadow(0 0 10px rgba(255, 140, 170, 0.45));
+}
+
+.drag-hint__text {
+  margin: 0;
+  font-size: clamp(0.78rem, 2.4vw, 0.92rem);
+  font-style: italic;
+  letter-spacing: 0.02em;
+  text-align: center;
+  line-height: 1.35;
+  text-shadow: 0 1px 6px rgba(40, 0, 15, 0.75);
+}
+
+@keyframes drag-hint-float {
+  0%,
+  100% {
+    transform: translateX(-50%) translateY(0);
+  }
+  50% {
+    transform: translateX(-50%) translateY(-6px);
+  }
+}
+
+@media (max-width: 480px) {
+  .overlay {
+    padding: 1rem;
+  }
+
+  .overlay__myanmar {
+    margin-top: 1rem;
+  }
+
+  .drag-hint {
+    bottom: max(0.85rem, env(safe-area-inset-bottom, 0px));
+    padding: 0.55rem 0.9rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .drag-hint {
+    animation: none;
+  }
+}
